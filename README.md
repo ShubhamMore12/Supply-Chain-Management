@@ -1,2 +1,2 @@
-# Supply_Chain-Management
+# Supply-Chain-Management
 System for managing Supply chain using Ethereum
