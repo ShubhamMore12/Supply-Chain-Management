@@ -147,7 +147,9 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     }
 
     modifier MCollectibleForSaleByCustomer(uint256 _uin) {
-        require(items[_uin].productState == State.SCollectibleForSaleByCustomer);
+        require(
+            items[_uin].productState == State.SCollectibleForSaleByCustomer
+        );
         _;
     }
 
@@ -157,7 +159,9 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     }
 
     modifier MReceivedCollectibleByCustomer(uint256 _uin) {
-        require(items[_uin].productState == State.SReceivedCollectibleByCustomer);
+        require(
+            items[_uin].productState == State.SReceivedCollectibleByCustomer
+        );
         _;
     }
 
@@ -200,10 +204,11 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     }
 
     //Step2
-    function forsalebymanufacturer(
-        uint256 uin,
-        uint256 price
-    ) public onlyManufacturer(msg.sender) MProducedByManufacturer(uin) {
+    function forsalebymanufacturer(uint256 uin, uint256 price)
+        public
+        onlyManufacturer(msg.sender)
+        MProducedByManufacturer(uin)
+    {
         items[uin].visibility = true;
         items[uin].productState = State.SForSaleByManufacturer;
         items[uin].productPrice = price;
@@ -212,10 +217,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
 
     //Step3
 
-    function shippedbymanufacturer(
-        uint256 uin,
-        address payable shipTo
-    )
+    function shippedbymanufacturer(uint256 uin, address payable shipTo)
         public
         onlyManufacturer(msg.sender)
         onlyDistributor(shipTo)
@@ -234,7 +236,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         onlyDistributor(msg.sender)
         paidEnough(items[uin].productPrice)
         MShippedByManufacturer(uin)
-        //checkValue(items[uin].productPrice, payable(msg.sender))
+    //checkValue(items[uin].productPrice, payable(msg.sender))
     {
         items[uin].productState = State.SReceivedByDistributor;
         items[uin].visibility = false;
@@ -248,13 +250,10 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     }
 
     //Step5
-    function forsalebydistributor(
-        uint256 uin,
-        uint256 price
-    ) 
-    public 
-    onlyDistributor(msg.sender)  
-    MReceivedByDistributor(uin) 
+    function forsalebydistributor(uint256 uin, uint256 price)
+        public
+        onlyDistributor(msg.sender)
+        MReceivedByDistributor(uin)
     {
         items[uin].visibility = true;
         items[uin].productState = State.SForSaleByDistributor;
@@ -263,28 +262,24 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     }
 
     //Step6
-    function shippedbydistributor(
-        uint256 uin,
-        address payable shipTo
-    ) 
-    public
-    onlyDistributor(msg.sender)
-    onlyRetailer(shipTo)
-    MForSaleByDistributor(uin)
+    function shippedbydistributor(uint256 uin, address payable shipTo)
+        public
+        onlyDistributor(msg.sender)
+        onlyRetailer(shipTo)
+        MForSaleByDistributor(uin)
     {
-        items[uin].productState=State.SShippedByDistributor;
-        items[uin].ShipTo=shipTo;
+        items[uin].productState = State.SShippedByDistributor;
+        items[uin].ShipTo = shipTo;
         emit EShippedByDistributor(uin);
     }
 
     //Step7
-    function receivedbyretailer(
-        uint256 uin
-    )
-    public payable
-    onlyRetailer(msg.sender)
-    paidEnough(items[uin].productPrice) 
-    MShippedByDistributor(uin)
+    function receivedbyretailer(uint256 uin)
+        public
+        payable
+        onlyRetailer(msg.sender)
+        paidEnough(items[uin].productPrice)
+        MShippedByDistributor(uin)
     {
         items[uin].productState = State.SReceivedByRetailer;
         items[uin].visibility = false;
@@ -298,42 +293,35 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     }
 
     //Step8
-    function forsalebyretailer(
-        uint256 uin,
-        uint price
-    )
-    public 
-    onlyRetailer(msg.sender)
-    MReceivedByRetailer(uin)
+    function forsalebyretailer(uint256 uin, uint256 price)
+        public
+        onlyRetailer(msg.sender)
+        MReceivedByRetailer(uin)
     {
-        items[uin].productState=State.SForSaleByRetailer;
-        items[uin].productPrice=price;
+        items[uin].productState = State.SForSaleByRetailer;
+        items[uin].productPrice = price;
         emit EForSaleByRetailer(uin);
     }
 
     //Step9
-    function shippedbyretailer(
-        uint256 uin,
-        address payable shipTo
-    ) 
-    public
-    onlyRetailer(msg.sender)
-    onlyConsumer(shipTo)
-    MForSaleByRetailer(uin)
+    function shippedbyretailer(uint256 uin, address payable shipTo)
+        public
+        onlyRetailer(msg.sender)
+        onlyConsumer(shipTo)
+        MForSaleByRetailer(uin)
     {
-        items[uin].productState=State.SShippedByRetailer;
-        items[uin].ShipTo=shipTo;
+        items[uin].productState = State.SShippedByRetailer;
+        items[uin].ShipTo = shipTo;
         emit EShippedByRetailer(uin);
     }
 
     //Step10
-    function receivedbycustomer(
-        uint uin
-    )
-    public payable
-    onlyConsumer(payable(msg.sender)) 
-    paidEnough(items[uin].productPrice)
-    MShippedByRetailer(uin)
+    function receivedbycustomer(uint256 uin)
+        public
+        payable
+        onlyConsumer(payable(msg.sender))
+        paidEnough(items[uin].productPrice)
+        MShippedByRetailer(uin)
     {
         items[uin].productState = State.SReceivedByCustomer;
         items[uin].visibility = false;
@@ -347,45 +335,39 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     }
 
     //Step11
-    function collectibleforsalebycustomer(
-        uint256 uin,
-        uint price
-    )
-    public
-    onlyConsumer(payable(msg.sender))
-    MReceivedByCustomer(uin)
-    MisCollectible(uin)
+    function collectibleforsalebycustomer(uint256 uin, uint256 price)
+        public
+        onlyConsumer(payable(msg.sender))
+        MReceivedByCustomer(uin)
+        MisCollectible(uin)
     {
-        items[uin].productState=State.SCollectibleForSaleByCustomer;
-        items[uin].productPrice=price;
-        items[uin].visibility=true;
+        items[uin].productState = State.SCollectibleForSaleByCustomer;
+        items[uin].productPrice = price;
+        items[uin].visibility = true;
         emit ECollectibleForSaleByCustomer(uin);
     }
 
     //Step12
-    function shippedcollectiblebycustomer(
-        uint256 uin,
-        address payable ShipTo
-    )
-    public
-    onlyConsumer(payable(msg.sender)) 
-    onlyConsumer(ShipTo) 
-    MCollectibleForSaleByCustomer(uin)
+    function shippedcollectiblebycustomer(uint256 uin, address payable ShipTo)
+        public
+        onlyConsumer(payable(msg.sender))
+        onlyConsumer(ShipTo)
+        MCollectibleForSaleByCustomer(uin)
     {
-        items[uin].productState=State.SShippedByCustomer;
-        items[uin].ShipTo=ShipTo;
+        items[uin].productState = State.SShippedByCustomer;
+        items[uin].ShipTo = ShipTo;
         emit EShippedtheCollectibleByCustomer(uin);
     }
+
     //Step13
 
-    function receivedcollectiblebycustomer(
-        uint256 uin
-    )
-    public payable
-    onlyConsumer(payable(msg.sender)) 
-    MisCollectible(uin)
-    paidEnough(items[uin].productPrice)
-    MShippedCollectibleByCustomer(uin)
+    function receivedcollectiblebycustomer(uint256 uin)
+        public
+        payable
+        onlyConsumer(payable(msg.sender))
+        MisCollectible(uin)
+        paidEnough(items[uin].productPrice)
+        MShippedCollectibleByCustomer(uin)
     {
         items[uin].productState = State.SReceivedCollectibleByCustomer;
         items[uin].visibility = false;

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.7+commit.e28d00a7"
+		"version": "0.8.2+commit.661d1103"
 	},
 	"language": "Solidity",
 	"output": {
@@ -914,7 +914,7 @@
 		"compilationTarget": {
 			"contracts/SupplyChain.sol": "SupplyChain"
 		},
-		"evmVersion": "london",
+		"evmVersion": "istanbul",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -969,10 +969,10 @@
 			]
 		},
 		"contracts/SupplyChain.sol": {
-			"keccak256": "0x733bf629bf1507d61bc67ae430a2447de6f5cf86f1e99ae1566d5ee15d6d9ea2",
+			"keccak256": "0xccef78d0e85e082b68d18d91b562314e2c08d3edf13e371716b71c468d83ba65",
 			"urls": [
-				"bzz-raw://aa7d11a01f6bb8aeddb5cbc11adaae926a70ffaa7413864a7c98316a24f88268",
-				"dweb:/ipfs/QmZp5oX3SLRJ6LDtyJdCZfs2NTMAgaAXaA7rKoqrJWSXXZ"
+				"bzz-raw://012c55f9771a4a3ddd6957a0b8512f1bfad911c44920cd8779fa3fc6de254778",
+				"dweb:/ipfs/QmQNE4WLGqPfTwzRT97E6FNJEgP25cmigTas721aNnerjj"
 			]
 		}
 	},
