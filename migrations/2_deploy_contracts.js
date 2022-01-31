@@ -1,6 +1,6 @@
-const voting = artifacts.require("voting")
+const SupplyChain = artifacts.require("SupplyChain")
 
 module.exports = async function (deployer, network, accounts) {
-    await deployer.deploy(voting)
-    const v = await voting.deployed()
+    await deployer.deploy(SupplyChain)
+    const s = await SupplyChain.deployed()
 }
