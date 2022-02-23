@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.2+commit.661d1103"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -847,6 +847,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "totalItemsOwned",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -914,7 +927,7 @@
 		"compilationTarget": {
 			"contracts/SupplyChain.sol": "SupplyChain"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -969,10 +982,10 @@
 			]
 		},
 		"contracts/SupplyChain.sol": {
-			"keccak256": "0xccef78d0e85e082b68d18d91b562314e2c08d3edf13e371716b71c468d83ba65",
+			"keccak256": "0x28d6d8f33d307dbb01e1f1d5698cea63708038f8ef00210d7136029148bb961c",
 			"urls": [
-				"bzz-raw://012c55f9771a4a3ddd6957a0b8512f1bfad911c44920cd8779fa3fc6de254778",
-				"dweb:/ipfs/QmQNE4WLGqPfTwzRT97E6FNJEgP25cmigTas721aNnerjj"
+				"bzz-raw://e352795e1d6c37892dc222ae62c9dd1d4ce0f66e99afb7843460a106c0edfaae",
+				"dweb:/ipfs/QmXNjuNbbC1XoTM3TRZ3GmGfCVJvw1qRyv1CcQuFaGGykY"
 			]
 		}
 	},

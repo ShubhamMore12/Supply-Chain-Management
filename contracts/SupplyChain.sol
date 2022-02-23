@@ -9,7 +9,8 @@ import "./Retailer.sol";
 contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     uint256[] composite;
     mapping(uint256 => Item) items;
-    mapping(address => totalItemsowned) ownership;
+    mapping(address => totalItems) ownership;
+    mapping(address => totalItems) shipped;
     //mapping(uint256 => composite) mappingComposite;
 
     uint256 randNonce = 0;
@@ -42,7 +43,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
 
     State constant defaultState = State.SProducedByManufacturer;
 
-    struct totalItemsowned {
+    struct totalItems {
         uint256 count;
         uint256[] itemUin;
     }
@@ -169,6 +170,11 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         require(items[_uin].collectible == true);
         _;
     }
+    
+    modifier MVerifyCaller(uint256 _uin) {
+        require(items[_uin].productHash==uint256(keccak256(abi.encodePacked(_uin,items[_uin].CurrentOwner,msg.sender,items[_uin].productName))));
+        _;
+    }
 
     // Step1
     function producebymanufacturer(
@@ -225,6 +231,9 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     {
         items[uin].productState = State.SShippedByManufacturer;
         items[uin].ShipTo = shipTo;
+        shipped[shipTo].count++;
+        shipped[shipTo].itemUin.push(uin);
+        items[uin].productHash=uint256(keccak256(abi.encodePacked(uin,items[uin].CurrentOwner,shipTo,items[uin].productName)));
         emit EShippedByManufacturer(uin);
     }
 
@@ -236,6 +245,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         onlyDistributor(msg.sender)
         paidEnough(items[uin].productPrice)
         MShippedByManufacturer(uin)
+        MVerifyCaller(uin)
     //checkValue(items[uin].productPrice, payable(msg.sender))
     {
         items[uin].productState = State.SReceivedByDistributor;
@@ -270,6 +280,9 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     {
         items[uin].productState = State.SShippedByDistributor;
         items[uin].ShipTo = shipTo;
+        shipped[shipTo].count++;
+        shipped[shipTo].itemUin.push(uin);
+        items[uin].productHash=uint256(keccak256(abi.encodePacked(uin,items[uin].CurrentOwner,shipTo,items[uin].productName)));
         emit EShippedByDistributor(uin);
     }
 
@@ -280,6 +293,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         onlyRetailer(msg.sender)
         paidEnough(items[uin].productPrice)
         MShippedByDistributor(uin)
+        MVerifyCaller(uin)
     {
         items[uin].productState = State.SReceivedByRetailer;
         items[uin].visibility = false;
@@ -312,6 +326,9 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     {
         items[uin].productState = State.SShippedByRetailer;
         items[uin].ShipTo = shipTo;
+        shipped[shipTo].count++;
+        shipped[shipTo].itemUin.push(uin);
+        items[uin].productHash=uint256(keccak256(abi.encodePacked(uin,items[uin].CurrentOwner,shipTo,items[uin].productName)));
         emit EShippedByRetailer(uin);
     }
 
@@ -322,6 +339,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         onlyConsumer(payable(msg.sender))
         paidEnough(items[uin].productPrice)
         MShippedByRetailer(uin)
+        MVerifyCaller(uin)
     {
         items[uin].productState = State.SReceivedByCustomer;
         items[uin].visibility = false;
@@ -356,6 +374,9 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     {
         items[uin].productState = State.SShippedByCustomer;
         items[uin].ShipTo = ShipTo;
+        shipped[ShipTo].count++;
+        shipped[ShipTo].itemUin.push(uin);
+        items[uin].productHash=uint256(keccak256(abi.encodePacked(uin,items[uin].CurrentOwner,ShipTo,items[uin].productName)));
         emit EShippedtheCollectibleByCustomer(uin);
     }
 
@@ -368,6 +389,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         MisCollectible(uin)
         paidEnough(items[uin].productPrice)
         MShippedCollectibleByCustomer(uin)
+        MVerifyCaller(uin)
     {
         items[uin].productState = State.SReceivedCollectibleByCustomer;
         items[uin].visibility = false;
@@ -403,6 +425,20 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
             items[uin].productDate,
             items[uin].productPrice
         );
+    }
+
+    function totalItemsOwned()
+    public
+    returns(uint256 [] memory)
+    {   uint256 [] memory x;
+        uint t=0;
+        for(uint i=0;i<ownership[msg.sender].itemUin.length;i++){
+            if (msg.sender==items[ownership[msg.sender].itemUin[i]].CurrentOwner){
+                x[t]=items[ownership[msg.sender].itemUin[i]].uin;
+                t=t+1;
+            }
+        }
+        return x;
     }
 }
 
