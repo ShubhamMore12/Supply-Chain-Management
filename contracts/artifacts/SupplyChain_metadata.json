@@ -847,19 +847,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "totalItemsOwned",
-				"outputs": [
-					{
-						"internalType": "uint256[]",
-						"name": "",
-						"type": "uint256[]"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -908,6 +895,19 @@
 				],
 				"name": "unreportRetailer",
 				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "x",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
@@ -982,10 +982,10 @@
 			]
 		},
 		"contracts/SupplyChain.sol": {
-			"keccak256": "0x28d6d8f33d307dbb01e1f1d5698cea63708038f8ef00210d7136029148bb961c",
+			"keccak256": "0x6062341d05bb2acbc40cd2297c8b9eca5ecf21278d643e874a0d365b638cbf16",
 			"urls": [
-				"bzz-raw://e352795e1d6c37892dc222ae62c9dd1d4ce0f66e99afb7843460a106c0edfaae",
-				"dweb:/ipfs/QmXNjuNbbC1XoTM3TRZ3GmGfCVJvw1qRyv1CcQuFaGGykY"
+				"bzz-raw://07ac9c204c0be7d84be68db57dd669d5ca14300765b3f06ba894672fd47fcbc6",
+				"dweb:/ipfs/QmZP9cp8t9GjrFp91M8juHGYkqzHwUMqMbAFv5yksUXA4S"
 			]
 		}
 	},

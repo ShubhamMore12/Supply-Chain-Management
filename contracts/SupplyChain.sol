@@ -25,6 +25,18 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
             ) % 82589933;
     }
 
+    function deleteItem(uint256 _uin, address x) internal {
+        for (uint256 i = 0; i < ownership[x].itemUin.length; i++) {
+            if (_uin == ownership[x].itemUin[i]) {
+                ownership[x].itemUin[i] = ownership[x].itemUin[
+                    ownership[x].itemUin.length - 1
+                ];
+                break;
+            }
+        }
+        delete ownership[x].itemUin[ownership[x].itemUin.length - 1];
+    }
+
     enum State {
         SProducedByManufacturer, //0
         SForSaleByManufacturer, //1
@@ -170,9 +182,21 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         require(items[_uin].collectible == true);
         _;
     }
-    
+
     modifier MVerifyCaller(uint256 _uin) {
-        require(items[_uin].productHash==uint256(keccak256(abi.encodePacked(_uin,items[_uin].CurrentOwner,msg.sender,items[_uin].productName))));
+        require(
+            items[_uin].productHash ==
+                uint256(
+                    keccak256(
+                        abi.encodePacked(
+                            _uin,
+                            items[_uin].CurrentOwner,
+                            msg.sender,
+                            items[_uin].productName
+                        )
+                    )
+                )
+        );
         _;
     }
 
@@ -233,7 +257,16 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].ShipTo = shipTo;
         shipped[shipTo].count++;
         shipped[shipTo].itemUin.push(uin);
-        items[uin].productHash=uint256(keccak256(abi.encodePacked(uin,items[uin].CurrentOwner,shipTo,items[uin].productName)));
+        items[uin].productHash = uint256(
+            keccak256(
+                abi.encodePacked(
+                    uin,
+                    items[uin].CurrentOwner,
+                    shipTo,
+                    items[uin].productName
+                )
+            )
+        );
         emit EShippedByManufacturer(uin);
     }
 
@@ -251,6 +284,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].productState = State.SReceivedByDistributor;
         items[uin].visibility = false;
         items[uin].CurrentOwner.transfer(items[uin].productPrice);
+        deleteItem(uin, items[uin].CurrentOwner);
         ownership[items[uin].CurrentOwner].count--;
         items[uin].CurrentOwner = payable(msg.sender);
         items[uin].productPrice = 0;
@@ -282,7 +316,16 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].ShipTo = shipTo;
         shipped[shipTo].count++;
         shipped[shipTo].itemUin.push(uin);
-        items[uin].productHash=uint256(keccak256(abi.encodePacked(uin,items[uin].CurrentOwner,shipTo,items[uin].productName)));
+        items[uin].productHash = uint256(
+            keccak256(
+                abi.encodePacked(
+                    uin,
+                    items[uin].CurrentOwner,
+                    shipTo,
+                    items[uin].productName
+                )
+            )
+        );
         emit EShippedByDistributor(uin);
     }
 
@@ -299,6 +342,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].visibility = false;
         items[uin].CurrentOwner.transfer(items[uin].productPrice);
         ownership[items[uin].CurrentOwner].count--;
+        deleteItem(uin, items[uin].CurrentOwner);
         items[uin].CurrentOwner = payable(msg.sender);
         items[uin].productPrice = 0;
         ownership[msg.sender].count++;
@@ -328,7 +372,16 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].ShipTo = shipTo;
         shipped[shipTo].count++;
         shipped[shipTo].itemUin.push(uin);
-        items[uin].productHash=uint256(keccak256(abi.encodePacked(uin,items[uin].CurrentOwner,shipTo,items[uin].productName)));
+        items[uin].productHash = uint256(
+            keccak256(
+                abi.encodePacked(
+                    uin,
+                    items[uin].CurrentOwner,
+                    shipTo,
+                    items[uin].productName
+                )
+            )
+        );
         emit EShippedByRetailer(uin);
     }
 
@@ -345,6 +398,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].visibility = false;
         items[uin].CurrentOwner.transfer(items[uin].productPrice);
         ownership[items[uin].CurrentOwner].count--;
+        deleteItem(uin, items[uin].CurrentOwner);
         items[uin].CurrentOwner = payable(msg.sender);
         items[uin].productPrice = 0;
         ownership[msg.sender].count++;
@@ -376,7 +430,16 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].ShipTo = ShipTo;
         shipped[ShipTo].count++;
         shipped[ShipTo].itemUin.push(uin);
-        items[uin].productHash=uint256(keccak256(abi.encodePacked(uin,items[uin].CurrentOwner,ShipTo,items[uin].productName)));
+        items[uin].productHash = uint256(
+            keccak256(
+                abi.encodePacked(
+                    uin,
+                    items[uin].CurrentOwner,
+                    ShipTo,
+                    items[uin].productName
+                )
+            )
+        );
         emit EShippedtheCollectibleByCustomer(uin);
     }
 
@@ -395,6 +458,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].visibility = false;
         items[uin].CurrentOwner.transfer(items[uin].productPrice);
         ownership[items[uin].CurrentOwner].count--;
+        deleteItem(uin, items[uin].CurrentOwner);
         items[uin].CurrentOwner = payable(msg.sender);
         items[uin].productPrice = 0;
         ownership[msg.sender].count++;
@@ -427,19 +491,22 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         );
     }
 
-    function totalItemsOwned()
-    public
-    returns(uint256 [] memory)
-    {   uint256 [] memory x;
-        uint t=0;
-        for(uint i=0;i<ownership[msg.sender].itemUin.length;i++){
-            if (msg.sender==items[ownership[msg.sender].itemUin[i]].CurrentOwner){
-                x[t]=items[ownership[msg.sender].itemUin[i]].uin;
-                t=t+1;
-            }
-        }
-        return x;
+    function x() public returns (uint256[] memory) {
+        return ownership[msg.sender].itemUin;
     }
+    // function totalItemsOwned()
+    // public
+    // returns(string [] memory)
+    // {   string [] memory x;
+    //     uint t=0;
+    //     for(uint i=0;i<ownership[msg.sender].itemUin.length;i++){
+    //         if (msg.sender==items[ownership[msg.sender].itemUin[i]].CurrentOwner){
+    //             x[t]=string(items[ownership[msg.sender].itemUin[i]].uin);
+    //             t=t+1;
+    //         }
+    //     }
+    //     return x;
+    // }
 }
 
 //         uint256 uin
