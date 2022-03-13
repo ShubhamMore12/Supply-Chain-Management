@@ -80,19 +80,71 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
 
     //Events
 
-    event EProducedByManufacturer(uint256 indexed uin);
-    event EForSaleByManufacturer(uint256 indexed uin);
-    event EShippedByManufacturer(uint256 indexed uin);
-    event EReceivedByDistributor(uint256 indexed uin);
-    event EForSaleByDistributor(uint256 indexed uin);
-    event EShippedByDistributor(uint256 indexed uin);
-    event EReceivedByRetailer(uint256 indexed uin);
-    event EForSaleByRetailer(uint256 indexed uin);
-    event EShippedByRetailer(uint256 indexed uin);
-    event EReceivedByCustomer(uint256 indexed uin);
-    event ECollectibleForSaleByCustomer(uint256 indexed uin);
-    event EShippedtheCollectibleByCustomer(uint256 indexed uin);
-    event EReceivedCollectibleByCustomer(uint256 indexed uin);
+    event EProducedByManufacturer(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y
+    );
+    event EForSaleByManufacturer(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y,
+        uint256 z
+    );
+    event EShippedByManufacturer(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y,
+        address indexed z
+    );
+    event EReceivedByDistributor(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y
+    );
+    event EForSaleByDistributor(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y,
+        uint256 z
+    );
+    event EShippedByDistributor(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y,
+        address indexed z
+    );
+    event EReceivedByRetailer(uint256 indexed uin, uint256 x, address y);
+    event EForSaleByRetailer(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y,
+        uint256 z
+    );
+    event EShippedByRetailer(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y,
+        address indexed z
+    );
+    event EReceivedByCustomer(uint256 indexed uin, uint256 x, address y);
+    event ECollectibleForSaleByCustomer(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y,
+        uint256 z
+    );
+    event EShippedtheCollectibleByCustomer(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y,
+        address indexed z
+    );
+    event EReceivedCollectibleByCustomer(
+        uint256 indexed uin,
+        uint256 x,
+        address indexed y
+    );
 
     //Is Amount Equal
     modifier paidEnough(uint256 _price) {
@@ -229,7 +281,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         );
         ownership[manufacturer].count++;
         ownership[manufacturer].itemUin.push(uin);
-        emit EProducedByManufacturer(uin);
+        emit EProducedByManufacturer(uin, block.timestamp, msg.sender);
         return (uin);
     }
 
@@ -242,7 +294,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].visibility = true;
         items[uin].productState = State.SForSaleByManufacturer;
         items[uin].productPrice = price;
-        emit EForSaleByManufacturer(uin);
+        emit EForSaleByManufacturer(uin, block.timestamp, msg.sender, price);
     }
 
     //Step3
@@ -267,7 +319,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
                 )
             )
         );
-        emit EShippedByManufacturer(uin);
+        emit EShippedByManufacturer(uin, block.timestamp, msg.sender, shipTo);
     }
 
     //Step4
@@ -290,7 +342,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].productPrice = 0;
         ownership[msg.sender].count++;
         ownership[msg.sender].itemUin.push(uin);
-        emit EReceivedByDistributor(uin);
+        emit EReceivedByDistributor(uin, block.timestamp, msg.sender);
     }
 
     //Step5
@@ -302,7 +354,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].visibility = true;
         items[uin].productState = State.SForSaleByDistributor;
         items[uin].productPrice = price;
-        emit EForSaleByDistributor(uin);
+        emit EForSaleByDistributor(uin, block.timestamp, msg.sender, price);
     }
 
     //Step6
@@ -326,7 +378,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
                 )
             )
         );
-        emit EShippedByDistributor(uin);
+        emit EShippedByDistributor(uin, block.timestamp, msg.sender, shipTo);
     }
 
     //Step7
@@ -347,7 +399,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].productPrice = 0;
         ownership[msg.sender].count++;
         ownership[msg.sender].itemUin.push(uin);
-        emit EReceivedByRetailer(uin);
+        emit EReceivedByRetailer(uin, block.timestamp, msg.sender);
     }
 
     //Step8
@@ -358,7 +410,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
     {
         items[uin].productState = State.SForSaleByRetailer;
         items[uin].productPrice = price;
-        emit EForSaleByRetailer(uin);
+        emit EForSaleByRetailer(uin, block.timestamp, msg.sender, price);
     }
 
     //Step9
@@ -382,7 +434,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
                 )
             )
         );
-        emit EShippedByRetailer(uin);
+        emit EShippedByRetailer(uin, block.timestamp, msg.sender, shipTo);
     }
 
     //Step10
@@ -403,7 +455,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].productPrice = 0;
         ownership[msg.sender].count++;
         ownership[msg.sender].itemUin.push(uin);
-        emit EReceivedByCustomer(uin);
+        emit EReceivedByCustomer(uin, block.timestamp, msg.sender);
     }
 
     //Step11
@@ -416,7 +468,12 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].productState = State.SCollectibleForSaleByCustomer;
         items[uin].productPrice = price;
         items[uin].visibility = true;
-        emit ECollectibleForSaleByCustomer(uin);
+        emit ECollectibleForSaleByCustomer(
+            uin,
+            block.timestamp,
+            msg.sender,
+            price
+        );
     }
 
     //Step12
@@ -440,7 +497,12 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
                 )
             )
         );
-        emit EShippedtheCollectibleByCustomer(uin);
+        emit EShippedtheCollectibleByCustomer(
+            uin,
+            block.timestamp,
+            msg.sender,
+            ShipTo
+        );
     }
 
     //Step13
@@ -463,7 +525,7 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         items[uin].productPrice = 0;
         ownership[msg.sender].count++;
         ownership[msg.sender].itemUin.push(uin);
-        emit EReceivedCollectibleByCustomer(uin);
+        emit EReceivedCollectibleByCustomer(uin, block.timestamp, msg.sender);
     }
 
     //Step 14
@@ -491,22 +553,51 @@ contract SupplyChain is Retailer, Consumer, Manufacturer, Distributor {
         );
     }
 
-    function x() public returns (uint256[] memory) {
-        return ownership[msg.sender].itemUin;
+    function x() public view returns  (Item[] memory) {
+        Item[] memory item= new Item[](ownership[msg.sender].itemUin.length);
+        for(uint i=0;i<ownership[msg.sender].itemUin.length;i++){
+            Item storage x=items[ownership[msg.sender].itemUin[i]];
+            item[i]=x;
+        }
+        return item;
     }
-    // function totalItemsOwned()
-    // public
-    // returns(string [] memory)
-    // {   string [] memory x;
-    //     uint t=0;
-    //     for(uint i=0;i<ownership[msg.sender].itemUin.length;i++){
-    //         if (msg.sender==items[ownership[msg.sender].itemUin[i]].CurrentOwner){
-    //             x[t]=string(items[ownership[msg.sender].itemUin[i]].uin);
-    //             t=t+1;
-    //         }
-    //     }
-    //     return x;
-    // }
+
+    function x(address z) 
+    public 
+    onlyOwner() 
+    view
+    returns (Item[] memory) {
+        Item[] memory item= new Item[](ownership[z].itemUin.length);
+        for(uint i=0;i<ownership[z].itemUin.length;i++){
+            Item storage x=items[ownership[z].itemUin[i]];
+            item[i]=x;
+        }
+        return item;
+    }
+    
+    function y() public 
+    view 
+    returns (Item[] memory) {
+        Item[] memory item= new Item[](shipped[msg.sender].itemUin.length);
+        for(uint i=0;i<shipped[msg.sender].itemUin.length;i++){
+            Item storage x=items[shipped[msg.sender].itemUin[i]];
+            item[i]=x;
+        }
+        return item;
+    }
+
+    function y(address z) 
+    public 
+    onlyOwner()
+    view
+    returns (Item[] memory) {
+        Item[] memory item= new Item[](shipped[z].itemUin.length);
+        for(uint i=0;i<shipped[z].itemUin.length;i++){
+            Item storage x=items[shipped[z].itemUin[i]];
+            item[i]=x;
+        }
+        return item;
+    }
 }
 
 //         uint256 uin
